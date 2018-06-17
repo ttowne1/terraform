@@ -3,11 +3,11 @@ provider "libvirt" {
   uri = "qemu+ssh://media@192.168.0.201/system"
 }
 
-# We fetch the latest ubuntu release image from their mirrors
-resource "libvirt_volume" "ubuntu-qcow2" {
-  name = "ubuntu-qcow2"
+# We fetch the latest centos release image from their mirrors
+resource "libvirt_volume" "centos-qcow2" {
+  name = "centos-qcow2"
   pool = "raid5" #CHANGE_ME
-  source = "http://192.168.0.201/install/cloud-images/ubuntu-16.04-server-cloudimg-amd64-disk1.img"
+  source = "http://192.168.0.201/install/cloud-images/CentOS-7-x86_64-GenericCloud-1805.qcow2"
   format = "qcow2"
 }
 
@@ -26,8 +26,8 @@ resource "libvirt_cloudinit" "commoninit" {
 
 
 # Create the machine
-resource "libvirt_domain" "domain-ubuntu" {
-  name = "ubuntu-terraform"
+resource "libvirt_domain" "domain-centos" {
+  name = "centos-terraform"
   memory = "512"
   vcpu = 1
 
@@ -39,7 +39,7 @@ resource "libvirt_domain" "domain-ubuntu" {
   }
 
   # IMPORTANT
-  # Ubuntu can hang is a isa-serial is not present at boot time.
+  # centos can hang is a isa-serial is not present at boot time.
   # If you find your CPU 100% and never is available this is why
   console {
     type        = "pty"
@@ -54,7 +54,7 @@ resource "libvirt_domain" "domain-ubuntu" {
   }
 
   disk {
-       volume_id = "${libvirt_volume.ubuntu-qcow2.id}"
+       volume_id = "${libvirt_volume.centos-qcow2.id}"
   }
   graphics {
     type = "spice"
@@ -66,5 +66,5 @@ resource "libvirt_domain" "domain-ubuntu" {
 # Print the Boxes IP
 # Note: you can use `virsh domifaddr <vm_name> <interface>` to get the ip later
 #output "ip" {
-#  value = "${libvirt_domain.domain-ubuntu.network_interface.0.addresses.0}"
+#  value = "${libvirt_domain.domain-centos.network_interface.0.addresses.0}"
 #}

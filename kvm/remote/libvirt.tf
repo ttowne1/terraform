@@ -7,15 +7,15 @@ provider "libvirt" {
 resource "libvirt_volume" "ubuntu-qcow2" {
   name = "ubuntu-qcow2"
   pool = "raid5" #CHANGE_ME
-  source = "https://cloud-images.ubuntu.com/releases/xenial/release/ubuntu-16.04-server-cloudimg-amd64-disk1.img"
+  source = "http://192.168.0.201/install/cloud-images/ubuntu-16.04-server-cloudimg-amd64-disk1.img"
   format = "qcow2"
 }
 
 # Create a network for our VMs
-resource "libvirt_network" "vm_network" {
-   name = "vm_network"
-   addresses = ["10.0.1.0/24"]
-}
+#resource "libvirt_network" "vm_network" {
+#   name = "vm_network"
+#   addresses = ["10.0.1.0/24"]
+#}
 
 # Use CloudInit to add our ssh-key to the instance
 resource "libvirt_cloudinit" "commoninit" {
@@ -35,7 +35,7 @@ resource "libvirt_domain" "domain-ubuntu" {
 
   network_interface {
     hostname = "master"
-    network_name = "vm_network"
+    bridge = "br0"
   }
 
   # IMPORTANT
@@ -65,6 +65,6 @@ resource "libvirt_domain" "domain-ubuntu" {
 
 # Print the Boxes IP
 # Note: you can use `virsh domifaddr <vm_name> <interface>` to get the ip later
-output "ip" {
-  value = "${libvirt_domain.domain-ubuntu.network_interface.0.addresses.0}"
-}
+#output "ip" {
+#  value = "${libvirt_domain.domain-ubuntu.network_interface.0.addresses.0}"
+#}

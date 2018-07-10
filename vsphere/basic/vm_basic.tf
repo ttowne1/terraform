@@ -4,7 +4,7 @@
 provider "vsphere" {
   # If you use a domain set your login like this "MyDomain\\MyUser"
   user                 = "root"
-  password             = "asdf;lkj"
+  password             = "****"
   vsphere_server       = "192.168.0.27"
 
   # if you have a self-signed cert
